@@ -4,16 +4,16 @@ on:
   workflow_call:
     inputs:   
       job_name:
-        required: false
+        required: true
         type: string
         default: 'Terraform Security and Compliance Checks'
       runs_on:
-        required: false
+        required: true
         type: string
         default: 'ubuntu-latest'
       working_directory:
-        required: false
-        type: string
+          required: true
+          type: string
 
 jobs:
   terraform_security_checks:

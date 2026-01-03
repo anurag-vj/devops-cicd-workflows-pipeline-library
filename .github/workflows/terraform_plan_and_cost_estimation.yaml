@@ -4,16 +4,25 @@ on:
   workflow_call:
     inputs:   
       job_name:
-        required: false
+        required: true
         type: string
         default: 'Terraform Plan and Cost Estimation'
       runs_on:
-        required: false
+        required: true
         type: string
         default: 'ubuntu-latest'
       working_directory:
-        required: false
+        required: true
         type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      INFRACOST_API_KEY:
+        required: true
 
 jobs:
   terraform_plan_and_cost_estimation:
