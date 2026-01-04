@@ -1,0 +1,42 @@
+name: react.js
+
+on:
+  workflow_call:
+    inputs:   
+      job_name:
+        required: true
+        type: string
+        default: 'Software Composition Analysis (Dependency Security)'
+      runs_on:
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+      node_version:
+        required: true
+        type: string
+      cache:
+        required: true
+        type: string
+
+jobs:  
+  software_composition_analysis:
+    name: ${{ inputs.job_name }}
+    runs-on: ${{ inputs.runs_on }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: ${{ inputs.cache }}
+
+      - name: Install Dependency
+        run: npm ci
+
+      - name: Dependency Vulnerability Scan (Retire.js)
+        run: |
+          npm install -g retire
+          retire --exitwith 1
+        continue-on-error: true

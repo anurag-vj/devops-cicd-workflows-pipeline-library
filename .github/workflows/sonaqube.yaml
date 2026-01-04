@@ -1,0 +1,46 @@
+name: sonarqube Analysis
+
+on:
+  workflow_call:
+    inputs:   
+      job_name:
+        required: true
+        type: string
+        default: 'Static Code Analysis (Sonarqube)'
+      runs_on:
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+      SONAR_HOST_URL:
+        required: true
+        type: string
+      SONAR_TOKEN:
+        required: true
+        type: string
+      PROJECT_KEY:
+        required: true
+        type: string
+
+jobs:
+  static_code_analysis:
+    name: ${{ inputs.job_name }}
+    runs-on: ${{ inputs.runs_on }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_HOST_URL: ${{ inputs.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ inputs.PROJECT_KEY }}
+
+      - name: SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
+        timeout-minutes: 5
+        env:
+          SONAR_HOST_URL: ${{ inputs.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
