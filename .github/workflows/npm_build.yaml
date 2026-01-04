@@ -34,7 +34,7 @@ jobs:
           cache: ${{ inputs.cache }}
 
       - name: Install Dependencies
-        run: npm Install
+        run: npm install
 
       - name: Build Artifact
         run: npm run build
