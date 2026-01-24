@@ -54,9 +54,9 @@ jobs:
       - name: terraform init
         id: init
         run: terraform init -input=false
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working_directory }}
 
       - name: terraform apply
         id: apply
         run: terraform apply -input=false -auto-approve
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working_directory }}

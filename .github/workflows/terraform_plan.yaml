@@ -25,7 +25,7 @@ on:
         required: true
 
 jobs:
-  terraform-apply:
+  terraform-init-plan:
     name: ${{ inputs.job_name }}
     runs-on: ${{ inputs.runs_on }}
     steps:
@@ -54,19 +54,19 @@ jobs:
       - name: tarraform init
         id: init
         run: terraform init -input=false
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working_directory }}
 
       - name: terraform fmt
         id: fmt
         run: terraform fmt -check -recursive
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working_directory }}
 
       - name: terraform validate
         id: validate
         run: terraform validate
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working_directory }}
 
       - name: terraform plan
         id: plan
         run: terraform plan -out=tfplan -input=false
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working_directory }}
