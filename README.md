@@ -8,7 +8,7 @@ MIT
 
 ```
 static_code_analysis:
-  uses: anurag-vj/actions_reusable_workflows/.github/workflows/sonarqube.yaml@main
+  uses: anurag-vj/evops-cicd-actions-workflows-library/.github/workflows/sonarqube.yaml@main
   with:
     job_name: 'Static Code Analysis (Sonarqube)'
     runs_on: 'ubuntu-latest'
@@ -17,7 +17,7 @@ static_code_analysis:
     PROJECT_KEY: frontend-ui-todo
 
 static_code_analysis:
-  uses: anurag-vj/actions_reusable_workflows/.github/workflows/sonarqube.yaml@main
+  uses: anurag-vj/evops-cicd-actions-workflows-library/.github/workflows/sonarqube.yaml@main
   with:
     job_name: 'Static Code Analysis (Sonarqube)'
     runs_on: 'ubuntu-latest'
