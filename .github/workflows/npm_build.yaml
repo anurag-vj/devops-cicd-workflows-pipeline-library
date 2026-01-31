@@ -2,7 +2,7 @@ name: 'npm build'
 
 on:
   workflow_call:
-    inputs:   
+    inputs:
       job_name:
         required: true
         type: string
@@ -23,36 +23,43 @@ on:
       artifacts_path:
         required: true
         type: string
-
+      working_directory:
+        required: true
+        type: string
 
 jobs:
   application_build:
     name: ${{ inputs.job_name }}
     runs-on: ${{ inputs.runs_on }}
+
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
           cache: ${{ inputs.cache }}
+          cache-dependency-path: ${{ inputs.working_directory }}/package-lock.json
 
       - name: Install Dependencies
-        run: npm install
+        working-directory: ${{ inputs.working_directory }}
+        run: npm ci
 
       - name: Build Artifact
+        working-directory: ${{ inputs.working_directory }}
         run: npm run build
 
-      - name: Prepare Deploymemnt Package
+      - name: Prepare Deployment Package
+        working-directory: ${{ inputs.working_directory }}
         run: |
           rm -rf package
           mkdir -p package
           cp -r build/* package/
 
       - name: Publish Build Artifact
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.artifacts_name }}
-          path: ${{ inputs.artifacts_path }}
+          path: ${{ inputs.working_directory }}/${{ inputs.artifacts_path }}

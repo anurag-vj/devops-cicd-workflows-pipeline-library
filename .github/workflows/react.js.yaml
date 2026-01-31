@@ -2,7 +2,7 @@ name: react.js
 
 on:
   workflow_call:
-    inputs:   
+    inputs:
       job_name:
         required: true
         type: string
@@ -17,25 +17,32 @@ on:
       cache:
         required: true
         type: string
+      working_directory:
+        required: true
+        type: string
 
-jobs:  
+jobs:
   software_composition_analysis:
     name: ${{ inputs.job_name }}
     runs-on: ${{ inputs.runs_on }}
+
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
           cache: ${{ inputs.cache }}
+          cache-dependency-path: ${{ inputs.working_directory }}/package-lock.json
 
-      - name: Install Dependency
+      - name: Install Dependencies
+        working-directory: ${{ inputs.working_directory }}
         run: npm ci
 
       - name: Dependency Vulnerability Scan (Retire.js)
+        working-directory: ${{ inputs.working_directory }}
         run: |
           npm install -g retire
           retire --exitwith 1

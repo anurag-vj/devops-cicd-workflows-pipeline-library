@@ -1,12 +1,12 @@
-name: sonarqube Analysis
+name: sonarqube-analysis
 
 on:
   workflow_call:
-    inputs:   
+    inputs:
       job_name:
         required: true
         type: string
-        default: 'Static Code Analysis (Sonarqube)'
+        default: 'Static Code Analysis (SonarQube)'
       runs_on:
         required: true
         type: string
@@ -20,13 +20,17 @@ on:
       PROJECT_KEY:
         required: true
         type: string
+      working_directory:
+        required: true
+        type: string
 
 jobs:
   static_code_analysis:
     name: ${{ inputs.job_name }}
     runs-on: ${{ inputs.runs_on }}
+
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: SonarQube Scan
@@ -37,6 +41,7 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=${{ inputs.PROJECT_KEY }}
+            -Dsonar.projectBaseDir=${{ inputs.working_directory }}
 
       - name: SonarQube Quality Gate
         uses: SonarSource/sonarqube-quality-gate-action@v1.1.0

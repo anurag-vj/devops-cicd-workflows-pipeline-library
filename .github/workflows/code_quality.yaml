@@ -17,13 +17,17 @@ on:
       cache:
         required: true
         type: string
+      working_directory:
+        required: true
+        type: string
 
 jobs:
   code_quality_checks:
     name: ${{ inputs.job_name }}
     runs-on: ${{ inputs.runs_on }}
+
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Biome
@@ -32,11 +36,12 @@ jobs:
           version: latest
 
       - name: JavaScript Linting (Biome)
+        working-directory: ${{ inputs.working_directory }}
         run: biome ci ./src/
         continue-on-error: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
           cache: ${{ inputs.cache }}
@@ -44,7 +49,8 @@ jobs:
       - name: Super-Linter
         uses: super-linter/super-linter@v7.1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_WORKSPACE: ${{ inputs.working_directory }}
           VALIDATE_CSS: true
           VALIDATE_JAVASCRIPT_ES: true
           VALIDATE_JSON: true
